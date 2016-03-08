@@ -1,0 +1,51 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>Aplicación de Cursos</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://maxcdn.bootstrapcdn.com;
+    connect-src *;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com;">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/ag-grid/dist/styles/ag-grid.css" rel="stylesheet" />
+    <link href="node_modules/ag-grid/dist/styles/theme-fresh.css" rel="stylesheet" />
+    <!-- 1. Carga de dependencias -->
+    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="node_modules/rxjs/bundles/Rx.js"></script>
+    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+    <script src="node_modules/angular2/bundles/http.dev.js"></script>
+     <script src="node_modules/angular2/bundles/router.dev.js"></script>
+    <!-- 2. Configuración de SystemJS -->
+    <script>
+        System.config({
+            packages: {
+                app: {
+                    format          : 'register',
+                    defaultExtension: 'js'
+                },               
+                'ag-grid-ng2': {
+                    defaultExtension: "js"
+                },
+                'ag-grid': {
+                    defaultExtension: "js"
+                }
+            },
+            map: {
+                'ag-grid-ng2': 'node_modules/ag-grid-ng2',
+                'ag-grid': 'node_modules/ag-grid'
+            }
+        });
+        System.import('app/boot')
+                .then(null, console.error.bind(console));
+    </script>
+</head>
+<!-- 3. Muestra la aplicación -->
+<body>
+
+<div class="container">
+    <my-app>Loading...</my-app>
+</div>
+
+</body>
+</html>

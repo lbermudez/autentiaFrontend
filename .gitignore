@@ -1,0 +1,4 @@
+#ignore
+node_modules/
+autentiaFrontend.sublime-project
+autentiaFrontend.sublime-workspace
