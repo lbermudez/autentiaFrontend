@@ -4,6 +4,7 @@ import {GridOptions} from 'ag-grid/main';
 import {CourseService} from "../../providers/services/CourseService";
 import {HTTP_PROVIDERS} from "angular2/http";
 
+
 // only import this if you are using the ag-Grid-Enterprise
 //import 'ag-grid-enterprise/main';
 
@@ -26,16 +27,16 @@ export class Table {
         this.courseService = courseService;
         this.gridOptions = <GridOptions>{};
         this.createRowData();
-        this.createColumnDefs();
+        this.createColumnDefs();      
         this.showGrid = true;       
     }
 
-    private createRowData() {
-        var rowData: any[] = [];
+       
+
+    private createRowData() {        
         this.courseService.getCourses().then(
-            (res) => {                
-                rowData = res;
-                this.rowData = rowData;
+            (res) => {                                
+                this.rowData = res;
             },
             (error) => {
                 console.log("Error: " + JSON.stringify(error));
@@ -45,7 +46,7 @@ export class Table {
 
     private createColumnDefs() {
         this.columnDefs = [            
-            { headerName: 'Título', field: 'title' },
+            { headerName: 'Título', field: 'title',  },
             { headerName: 'Profesor', field: 'teacher.name' },
             { headerName: 'Nivel', field: 'level' },
             { headerName: 'Horas', field: 'hours'},
@@ -53,23 +54,43 @@ export class Table {
         ];
     }
 
-    private calculateRowCount() {
-        if (this.gridOptions.api && this.rowData) {
-            var model = this.gridOptions.api.getModel();
-            var totalRows = this.rowData.length;
-            var processedRows = model.getRowCount();
-            this.rowCount = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
-        }
+    private getDataSource() {
+        var dataSource = {
+            rowCount: 15,
+            pageSize: 5, // changing to number, as scope keeps it as a string
+            getRows: function(params) {
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {                        
+                        var dataAfterSorting = JSON.parse(xhttp.responseText);
+                        var rowsThisPage = dataAfterSorting.slice(params.startRow, params.endRow);
+                        var lastRow = -1;
+                        if (dataAfterSorting.length <= params.endRow) {
+                            lastRow = dataAfterSorting.length;
+                        }
+                        params.successCallback(rowsThisPage, lastRow);
+
+                    }
+                };
+                xhttp.open("GET", "http://localhost:8080/courses/true/asc", true);
+                xhttp.send();
+                               
+
+            }
+        };
+        return dataSource;
     }
+
+      
 
     private onModelUpdated() {
-        console.log('onModelUpdated');
-        this.calculateRowCount();
+        console.log('onModelUpdated');        
     }
 
-    private onReady() {
-        console.log('onReady');
-        this.calculateRowCount();
+    private onGridReady($event) {
+        console.log('onReady'); 
+        this.gridOptions.api.setDatasource(this.getDataSource());
     }
 
     private onCellClicked($event) {
@@ -113,7 +134,7 @@ export class Table {
     }
 
     private onBeforeSortChanged() {
-        console.log('onBeforeSortChanged');
+        console.log('onBeforeSortChanged');        
     }
 
     private onAfterSortChanged() {

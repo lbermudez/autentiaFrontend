@@ -13,16 +13,13 @@
                      [showToolPanel]="showToolPanel"
                      [rowData]="rowData"
 
-                     enableColResize
-                     enableSorting
-                     enableFilter                     
-                     groupHeaders
-                     suppressRowClickSelection
-                     toolPanelSuppressGroups
-                     toolPanelSuppressValues
+                     enableColResize                     
+                     enableServerSideSorting
+                     enableServerSideFilter
                      debug
                      rowHeight="22"
-                     rowSelection="multiple"
+                     rowModelType='pagination'
+                     
 
                      (modelUpdated)="onModelUpdated()"
                      (cellClicked)="onCellClicked($event)"
@@ -39,7 +36,7 @@
                      (afterSortChanged)="onAfterSortChanged()"
                      (virtualRowRemoved)="onVirtualRowRemoved($event)"
                      (rowClicked)="onRowClicked($event)"
-                     (ready)="onReady($event)"
+                     (gridReady)="onGridReady($event)"
 
                      (columnEverythingChanged)="onColumnEvent($event)"
                      (columnRowGroupChanged)="onColumnEvent($event)"

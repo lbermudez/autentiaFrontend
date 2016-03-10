@@ -39,38 +39,50 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
                 }
                 Table.prototype.createRowData = function () {
                     var _this = this;
-                    var rowData = [];
                     this.courseService.getCourses().then(function (res) {
-                        rowData = res;
-                        _this.rowData = rowData;
+                        _this.rowData = res;
                     }, function (error) {
                         console.log("Error: " + JSON.stringify(error));
                     });
                 };
                 Table.prototype.createColumnDefs = function () {
                     this.columnDefs = [
-                        { headerName: 'Título', field: 'title' },
+                        { headerName: 'Título', field: 'title', },
                         { headerName: 'Profesor', field: 'teacher.name' },
                         { headerName: 'Nivel', field: 'level' },
                         { headerName: 'Horas', field: 'hours' },
                         { headerName: 'Activo', field: 'active' }
                     ];
                 };
-                Table.prototype.calculateRowCount = function () {
-                    if (this.gridOptions.api && this.rowData) {
-                        var model = this.gridOptions.api.getModel();
-                        var totalRows = this.rowData.length;
-                        var processedRows = model.getRowCount();
-                        this.rowCount = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
-                    }
+                Table.prototype.getDataSource = function () {
+                    var dataSource = {
+                        rowCount: 15,
+                        pageSize: 5,
+                        getRows: function (params) {
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.onreadystatechange = function () {
+                                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                                    var dataAfterSorting = JSON.parse(xhttp.responseText);
+                                    var rowsThisPage = dataAfterSorting.slice(params.startRow, params.endRow);
+                                    var lastRow = -1;
+                                    if (dataAfterSorting.length <= params.endRow) {
+                                        lastRow = dataAfterSorting.length;
+                                    }
+                                    params.successCallback(rowsThisPage, lastRow);
+                                }
+                            };
+                            xhttp.open("GET", "http://localhost:8080/courses/true/asc", true);
+                            xhttp.send();
+                        }
+                    };
+                    return dataSource;
                 };
                 Table.prototype.onModelUpdated = function () {
                     console.log('onModelUpdated');
-                    this.calculateRowCount();
                 };
-                Table.prototype.onReady = function () {
+                Table.prototype.onGridReady = function ($event) {
                     console.log('onReady');
-                    this.calculateRowCount();
+                    this.gridOptions.api.setDatasource(this.getDataSource());
                 };
                 Table.prototype.onCellClicked = function ($event) {
                     console.log('onCellClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
