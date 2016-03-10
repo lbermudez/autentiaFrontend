@@ -1,4 +1,4 @@
-System.register(["angular2/core", "../../providers/services/CourseService", "angular2/http", "../forms/courseForm", "angular2/router", 'ag-grid-ng2/main'], function(exports_1, context_1) {
+System.register(["angular2/core", "../forms/courseForm", "angular2/router", "../table/table"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,18 +10,12 @@ System.register(["angular2/core", "../../providers/services/CourseService", "ang
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, CourseService_1, http_1, courseForm_1, router_1, main_1;
+    var core_1, courseForm_1, router_1, table_1;
     var HomePage;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (CourseService_1_1) {
-                CourseService_1 = CourseService_1_1;
-            },
-            function (http_1_1) {
-                http_1 = http_1_1;
             },
             function (courseForm_1_1) {
                 courseForm_1 = courseForm_1_1;
@@ -29,31 +23,23 @@ System.register(["angular2/core", "../../providers/services/CourseService", "ang
             function (router_1_1) {
                 router_1 = router_1_1;
             },
-            function (main_1_1) {
-                main_1 = main_1_1;
+            function (table_1_1) {
+                table_1 = table_1_1;
             }],
         execute: function() {
             HomePage = (function () {
-                function HomePage(courseService) {
-                    var _this = this;
-                    this.courseService = courseService;
-                    this.courseService.getCourses().then(function (res) {
-                        _this.courses = res;
-                    }, function (error) {
-                        console.log("Error: " + JSON.stringify(error));
-                    });
+                function HomePage() {
                 }
                 HomePage = __decorate([
                     core_1.Component({
                         selector: "my-app",
                         templateUrl: "./app/components/home/home.html",
-                        providers: [CourseService_1.CourseService, http_1.HTTP_PROVIDERS],
-                        directives: [router_1.ROUTER_DIRECTIVES, main_1.AgGridNg2]
+                        directives: [router_1.ROUTER_DIRECTIVES, table_1.Table]
                     }),
                     router_1.RouteConfig([
                         { path: '/courseForm', name: 'CourseForm', component: courseForm_1.CourseForm }
                     ]), 
-                    __metadata('design:paramtypes', [CourseService_1.CourseService])
+                    __metadata('design:paramtypes', [])
                 ], HomePage);
                 return HomePage;
             }());

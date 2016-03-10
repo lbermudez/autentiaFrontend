@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="email">Profesor:</label>
+        <label class="control-label col-sm-2" for="">Profesor:</label>
         <div class="col-sm-7">
             <select class="form-control" required ngControl="teacher" id="teacher">
                 <option *ngFor="#teacher of teachers" [value]="teacher.id">{{teacher.name}} {{teacher.lastName1}}</option>
@@ -17,13 +17,13 @@
         </div>
     </div>  
     <div class="form-group">
-        <label class="control-label col-sm-2" for="email">Título:</label>
+        <label class="control-label col-sm-2" for="">Título:</label>
         <div class="col-sm-7">
             <input type="text" class="form-control" ngControl="title" id="title"> 
         </div>
     </div> 
     <div class="form-group">
-        <label class="control-label col-sm-2" for="email">Nivel:</label>
+        <label class="control-label col-sm-2" for="">Nivel:</label>
         <div class="col-sm-7">
             <select class="form-control" required ngControl="level" id="level">
                 <option *ngFor="#level of levels" [value]="level">{{level}}</option>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="email">Horas:</label>
+        <label class="control-label col-sm-2" for="">Horas:</label>
         <div class="col-sm-2">
             <input type="number" class="form-control" ngControl="hours" id="hours"> 
         </div>

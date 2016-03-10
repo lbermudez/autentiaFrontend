@@ -1,12 +1,7 @@
 <legend>Catálogo de Cursos</legend>
 <hr>
-<ul class="list-group">
-    <li class="list-group-item" *ngFor="#course of courses">
-        TITULO: {{ course.title }}, HORAS: {{ course.hours }}, PROFESOR: {{ course.teacher.name }}, {{ course.teacher.lastName1 }}, {{ course.teacher.lastName2 }}, ACTIVO: {{ course.active }}, NIVEL: {{ course.level }}
-    </li>
-</ul>
 
-
+<table-data></table-data>
 
 <a [routerLink]="['/CourseForm']" class="btn btn-info" role="button">Nuevo Curso</a>
 <br>
