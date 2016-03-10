@@ -1,4 +1,4 @@
-System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/CourseService", "angular2/http"], function(exports_1, context_1) {
+System.register(['angular2/core', "../../providers/services/CourseService", "angular2/http", 'ag-grid-ng2/main'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,21 +10,21 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, main_1, CourseService_1, http_1;
+    var core_1, CourseService_1, http_1, main_1;
     var Table;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (main_1_1) {
-                main_1 = main_1_1;
-            },
             function (CourseService_1_1) {
                 CourseService_1 = CourseService_1_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
+            },
+            function (main_1_1) {
+                main_1 = main_1_1;
             }],
         execute: function() {
             // only import this if you are using the ag-Grid-Enterprise
@@ -32,19 +32,11 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
             Table = (function () {
                 function Table(courseService) {
                     this.courseService = courseService;
+                    this.courseService = courseService;
                     this.gridOptions = {};
-                    this.createRowData();
                     this.createColumnDefs();
                     this.showGrid = true;
                 }
-                Table.prototype.createRowData = function () {
-                    var _this = this;
-                    this.courseService.getCourses().then(function (res) {
-                        _this.rowData = res;
-                    }, function (error) {
-                        console.log("Error: " + JSON.stringify(error));
-                    });
-                };
                 Table.prototype.createColumnDefs = function () {
                     this.columnDefs = [
                         { headerName: 'Título', field: 'title', },
@@ -54,11 +46,15 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
                         { headerName: 'Activo', field: 'active' }
                     ];
                 };
-                Table.prototype.getDataSource = function () {
+                Table.prototype.getDataSource = function (countCourses) {
                     var dataSource = {
-                        rowCount: 15,
+                        sort: 'asc',
+                        rowCount: countCourses,
                         pageSize: 5,
                         getRows: function (params) {
+                            this.getCourses(params);
+                        },
+                        getCourses: function (params) {
                             var xhttp = new XMLHttpRequest();
                             xhttp.onreadystatechange = function () {
                                 if (xhttp.readyState == 4 && xhttp.status == 200) {
@@ -71,7 +67,10 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
                                     params.successCallback(rowsThisPage, lastRow);
                                 }
                             };
-                            xhttp.open("GET", "http://localhost:8080/courses/true/asc", true);
+                            if (params.sortModel.length != 0) {
+                                this.sort = params.sortModel[0].sort;
+                            }
+                            xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort, true);
                             xhttp.send();
                         }
                     };
@@ -81,8 +80,13 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
                     console.log('onModelUpdated');
                 };
                 Table.prototype.onGridReady = function ($event) {
+                    var _this = this;
                     console.log('onReady');
-                    this.gridOptions.api.setDatasource(this.getDataSource());
+                    this.courseService.getCourses().then(function (res) {
+                        _this.gridOptions.api.setDatasource(_this.getDataSource(res.length));
+                    }, function (error) {
+                        console.log("Error: " + JSON.stringify(error));
+                    });
                 };
                 Table.prototype.onCellClicked = function ($event) {
                     console.log('onCellClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
@@ -141,8 +145,8 @@ System.register(['angular2/core', 'ag-grid-ng2/main', "../../providers/services/
                         selector: 'table-data',
                         templateUrl: './app/components/table/table.html',
                         directives: [main_1.AgGridNg2],
-                        styles: ['.toolbar button {margin: 2px; padding: 0px;}'],
-                        providers: [CourseService_1.CourseService, http_1.HTTP_PROVIDERS]
+                        providers: [CourseService_1.CourseService, http_1.HTTP_PROVIDERS],
+                        styles: ['.toolbar button {margin: 2px; padding: 0px;}']
                     }), 
                     __metadata('design:paramtypes', [CourseService_1.CourseService])
                 ], Table);

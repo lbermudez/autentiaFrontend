@@ -1,8 +1,8 @@
 import {Component} from 'angular2/core';
-import {AgGridNg2} from 'ag-grid-ng2/main';
-import {GridOptions} from 'ag-grid/main';
 import {CourseService} from "../../providers/services/CourseService";
 import {HTTP_PROVIDERS} from "angular2/http";
+import {AgGridNg2} from 'ag-grid-ng2/main';
+import {GridOptions} from 'ag-grid/main';
 
 
 // only import this if you are using the ag-Grid-Enterprise
@@ -12,36 +12,22 @@ import {HTTP_PROVIDERS} from "angular2/http";
     selector: 'table-data',
     templateUrl: './app/components/table/table.html',
     directives: [AgGridNg2],
-    styles: ['.toolbar button {margin: 2px; padding: 0px;}'],
-    providers: [CourseService, HTTP_PROVIDERS]
+    providers: [CourseService, HTTP_PROVIDERS],
+    styles: ['.toolbar button {margin: 2px; padding: 0px;}']   
 })
 export class Table {
-    courseService: CourseService;    
+        
     private gridOptions: GridOptions;
-    private showGrid: boolean;
-    private rowData: any[];
+    private showGrid: boolean;    
     private columnDefs: any[];
     private rowCount: string;
+    
 
-    constructor(courseService: CourseService) {        
-        this.courseService = courseService;
-        this.gridOptions = <GridOptions>{};
-        this.createRowData();
+    constructor(private courseService: CourseService) {  
+        this.courseService = courseService;                      
+        this.gridOptions = <GridOptions>{};        
         this.createColumnDefs();      
         this.showGrid = true;       
-    }
-
-       
-
-    private createRowData() {        
-        this.courseService.getCourses().then(
-            (res) => {                                
-                this.rowData = res;
-            },
-            (error) => {
-                console.log("Error: " + JSON.stringify(error));
-            }
-        )
     }
 
     private createColumnDefs() {
@@ -54,16 +40,21 @@ export class Table {
         ];
     }
 
-    private getDataSource() {
+    private getDataSource(countCourses) {
         var dataSource = {
-            rowCount: 15,
-            pageSize: 5, // changing to number, as scope keeps it as a string
-            getRows: function(params) {
+            sort: 'asc';
+            rowCount: countCourses,
+            pageSize: 5,
 
+            getRows: function(params) {                                             
+                this.getCourses(params);
+            },
+
+            getCourses: function(params) {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
-                    if (xhttp.readyState == 4 && xhttp.status == 200) {                        
-                        var dataAfterSorting = JSON.parse(xhttp.responseText);
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        var dataAfterSorting = JSON.parse(xhttp.responseText);                        
                         var rowsThisPage = dataAfterSorting.slice(params.startRow, params.endRow);
                         var lastRow = -1;
                         if (dataAfterSorting.length <= params.endRow) {
@@ -72,25 +63,36 @@ export class Table {
                         params.successCallback(rowsThisPage, lastRow);
 
                     }
-                };
-                xhttp.open("GET", "http://localhost:8080/courses/true/asc", true);
-                xhttp.send();
-                               
+                }
 
+
+                if (params.sortModel.length != 0) {
+                    this.sort = params.sortModel[0].sort;
+                }
+                xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort, true);
+                xhttp.send(); 
             }
+
         };
         return dataSource;
     }
-
-      
+   
 
     private onModelUpdated() {
         console.log('onModelUpdated');        
     }
 
     private onGridReady($event) {
-        console.log('onReady'); 
-        this.gridOptions.api.setDatasource(this.getDataSource());
+        console.log('onReady');
+        this.courseService.getCourses().then(
+            (res) => {                
+                this.gridOptions.api.setDatasource(this.getDataSource(res.length));
+            },
+            (error) => {
+                console.log("Error: " + JSON.stringify(error));
+            }
+        )        
+        
     }
 
     private onCellClicked($event) {
