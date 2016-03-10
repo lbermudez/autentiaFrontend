@@ -1,4 +1,4 @@
-System.register(["angular2/core", "../form/courseForm", "../courseManager/courseManager", "angular2/router"], function(exports_1, context_1) {
+System.register(["angular2/core", "../table/table", "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,43 +10,34 @@ System.register(["angular2/core", "../form/courseForm", "../courseManager/course
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, courseForm_1, courseManager_1, router_1;
-    var HomePage;
+    var core_1, table_1, router_1;
+    var CourseManager;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (courseForm_1_1) {
-                courseForm_1 = courseForm_1_1;
-            },
-            function (courseManager_1_1) {
-                courseManager_1 = courseManager_1_1;
+            function (table_1_1) {
+                table_1 = table_1_1;
             },
             function (router_1_1) {
                 router_1 = router_1_1;
             }],
         execute: function() {
-            HomePage = (function () {
-                function HomePage() {
+            CourseManager = (function () {
+                function CourseManager() {
                 }
-                HomePage = __decorate([
+                CourseManager = __decorate([
                     core_1.Component({
-                        selector: "my-app",
-                        templateUrl: "./app/components/home/home.html",
-                        directives: [router_1.ROUTER_DIRECTIVES]
-                    }),
-                    router_1.RouteConfig([
-                        { path: '/', name: 'root', redirectTo: ['/CourseManager'] },
-                        { path: '/courseManager', name: 'CourseManager', component: courseManager_1.CourseManager },
-                        { path: '/courseForm', name: 'CourseForm', component: courseForm_1.CourseForm }
-                    ]), 
+                        templateUrl: "./app/components/courseManager/courseManager.html",
+                        directives: [table_1.Table, router_1.ROUTER_DIRECTIVES]
+                    }), 
                     __metadata('design:paramtypes', [])
-                ], HomePage);
-                return HomePage;
+                ], CourseManager);
+                return CourseManager;
             }());
-            exports_1("HomePage", HomePage);
+            exports_1("CourseManager", CourseManager);
         }
     }
 });
-//# sourceMappingURL=home.js.map
+//# sourceMappingURL=courseManager.js.map

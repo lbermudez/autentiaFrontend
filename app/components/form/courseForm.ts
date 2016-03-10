@@ -4,10 +4,11 @@ import {CourseService} from "../../providers/services/CourseService";
 import {TeacherService} from "../../providers/services/TeacherService";
 import {HTTP_PROVIDERS} from "angular2/http";
 import {Course, Teacher} from "../../classes/Model";
+import {Router} from "angular2/router";
 
 @Component({
     selector: "my-app",
-    templateUrl: "./app/components/forms/courseForm.html",
+    templateUrl: "./app/components/form/courseForm.html",
     directives: [FORM_DIRECTIVES],
     providers: [CourseService, TeacherService, HTTP_PROVIDERS]
 })
@@ -20,7 +21,8 @@ export class CourseForm {
     levels = ['', 'BASICO', 'INTERMEDIO', 'AVANZADO'];
     teachers;
 
-    constructor(courseService: CourseService, teacherService: TeacherService, builder: FormBuilder) {
+    constructor(courseService: CourseService, teacherService: TeacherService, builder: FormBuilder, private router: Router) {
+        this.router = router;
 		this.courseService = courseService;
 		this.teacherService = teacherService;
         this.courseForm = builder.group({        	
@@ -69,6 +71,7 @@ export class CourseForm {
 		this.courseService.createCourse(course).then(
             (success) => {
                 console.log(success);
+                this.router.navigate(["/CourseManager"]);
             },
             (error) => {
                 console.log(error);

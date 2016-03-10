@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common", "../../providers/services/CourseService", "../../providers/services/TeacherService", "angular2/http", "../../classes/Model"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common", "../../providers/services/CourseService", "../../providers/services/TeacherService", "angular2/http", "../../classes/Model", "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, CourseService_1, TeacherService_1, http_1, Model_1;
+    var core_1, common_1, CourseService_1, TeacherService_1, http_1, Model_1, router_1;
     var CourseForm;
     return {
         setters:[
@@ -31,11 +31,16 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
             },
             function (Model_1_1) {
                 Model_1 = Model_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
             }],
         execute: function() {
             CourseForm = (function () {
-                function CourseForm(courseService, teacherService, builder) {
+                function CourseForm(courseService, teacherService, builder, router) {
+                    this.router = router;
                     this.levels = ['', 'BASICO', 'INTERMEDIO', 'AVANZADO'];
+                    this.router = router;
                     this.courseService = courseService;
                     this.teacherService = teacherService;
                     this.courseForm = builder.group({
@@ -64,10 +69,12 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                     });
                 };
                 CourseForm.prototype.createCourse = function (f) {
+                    var _this = this;
                     var teacher = new Model_1.Teacher(f.teacher);
                     var course = new Model_1.Course(f.title, f.hours, teacher, f.level, f.active);
                     this.courseService.createCourse(course).then(function (success) {
                         console.log(success);
+                        _this.router.navigate(["/CourseManager"]);
                     }, function (error) {
                         console.log(error);
                     });
@@ -75,11 +82,11 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                 CourseForm = __decorate([
                     core_1.Component({
                         selector: "my-app",
-                        templateUrl: "./app/components/forms/courseForm.html",
+                        templateUrl: "./app/components/form/courseForm.html",
                         directives: [common_1.FORM_DIRECTIVES],
                         providers: [CourseService_1.CourseService, TeacherService_1.TeacherService, http_1.HTTP_PROVIDERS]
                     }), 
-                    __metadata('design:paramtypes', [CourseService_1.CourseService, TeacherService_1.TeacherService, common_1.FormBuilder])
+                    __metadata('design:paramtypes', [CourseService_1.CourseService, TeacherService_1.TeacherService, common_1.FormBuilder, router_1.Router])
                 ], CourseForm);
                 return CourseForm;
             }());
