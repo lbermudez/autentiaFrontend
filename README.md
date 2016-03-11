@@ -2,8 +2,9 @@
 
 Instalacion y ejecución:
 
-npm install
-npm start
+> npm install
+
+> npm start
 
 
 He detectado varios problemas en el objeto ng2-grid:
