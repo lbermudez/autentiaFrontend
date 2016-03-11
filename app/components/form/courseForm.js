@@ -40,9 +40,6 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                 function CourseForm(courseService, teacherService, builder, router) {
                     this.router = router;
                     this.levels = ['', 'BASICO', 'INTERMEDIO', 'AVANZADO'];
-                    this.options = {
-                        url: 'http://localhost:8080/upload'
-                    };
                     this.router = router;
                     this.courseService = courseService;
                     this.teacherService = teacherService;
@@ -81,12 +78,6 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                     }, function (error) {
                         console.log(error);
                     });
-                };
-                CourseForm.prototype.handleUpload = function (data) {
-                    if (data && data.response) {
-                        data = JSON.parse(data.response);
-                        this.uploadFile = data;
-                    }
                 };
                 CourseForm = __decorate([
                     core_1.Component({

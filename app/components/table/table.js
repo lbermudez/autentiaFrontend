@@ -59,13 +59,17 @@ System.register(['angular2/core', "../../providers/services/CourseService", "ang
                             xhttp.onreadystatechange = function () {
                                 if (xhttp.readyState == 4 && xhttp.status == 200) {
                                     var data = JSON.parse(xhttp.responseText);
-                                    params.successCallback(data, params.endRow);
+                                    var lastRow = -1;
+                                    if (data.length <= params.endRow) {
+                                        lastRow = data.length;
+                                    }
+                                    params.successCallback(data, data);
                                 }
                             };
                             if (params.sortModel.length != 0) {
                                 this.sort = params.sortModel[0].sort;
                             }
-                            xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort + "/" + params.startRow + "/" + this.pageSize, true);
+                            xhttp.open("GET", "http://localhost:8080/courses/" + CourseService_1.CourseService.ACTIVES + "/" + this.sort + "/" + params.startRow + "/" + this.pageSize, true);
                             xhttp.send();
                         }
                     };
@@ -77,8 +81,8 @@ System.register(['angular2/core', "../../providers/services/CourseService", "ang
                 Table.prototype.onGridReady = function ($event) {
                     var _this = this;
                     console.log('onReady');
-                    this.courseService.getCourses().then(function (res) {
-                        _this.gridOptions.api.setDatasource(_this.getDataSource(res.length));
+                    this.courseService.countCourses(CourseService_1.CourseService.ACTIVES).then(function (res) {
+                        _this.gridOptions.api.setDatasource(_this.getDataSource(res));
                     }, function (error) {
                         console.log("Error: " + JSON.stringify(error));
                     });

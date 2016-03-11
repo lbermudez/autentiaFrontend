@@ -55,15 +55,19 @@ export class Table {
                 xhttp.onreadystatechange = function() {
                     if (xhttp.readyState == 4 && xhttp.status == 200) {
                         var data = JSON.parse(xhttp.responseText);                                                
-                        params.successCallback(data, params.endRow);
+                        var lastRow = -1;
+                        if (data.length <= params.endRow) {
+                            lastRow = data.length;
+                        }
+
+                        params.successCallback(data, data);
                     }
                 }
-
 
                 if (params.sortModel.length != 0) {
                     this.sort = params.sortModel[0].sort;
                 }
-                xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort + "/" + params.startRow + "/" + this.pageSize, true);
+                xhttp.open("GET", "http://localhost:8080/courses/" + CourseService.ACTIVES + "/" + this.sort + "/" + params.startRow + "/" + this.pageSize, true);
                 xhttp.send(); 
             }
 
@@ -78,9 +82,9 @@ export class Table {
 
     private onGridReady($event) {
         console.log('onReady');
-        this.courseService.getCourses().then(
+        this.courseService.countCourses(CourseService.ACTIVES).then(
             (res) => {                
-                this.gridOptions.api.setDatasource(this.getDataSource(res.length));
+                this.gridOptions.api.setDatasource(this.getDataSource(res));
             },
             (error) => {
                 console.log("Error: " + JSON.stringify(error));

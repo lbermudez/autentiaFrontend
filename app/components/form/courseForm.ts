@@ -79,16 +79,4 @@ export class CourseForm {
             }
         )
     }
-
-    uploadFile: any;
-    options: Object = {
-        url: 'http://localhost:8080/upload'
-    };
-
-    handleUpload(data): void {
-        if (data && data.response) {
-            data = JSON.parse(data.response);
-            this.uploadFile = data;
-        }
-    }
 }

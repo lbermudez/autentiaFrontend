@@ -29,10 +29,20 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
                     this.http = http;
                     this.headers.append('Content-Type', 'application/json');
                 }
+                CourseService.prototype.countCourses = function (active) {
+                    var _this = this;
+                    return new Promise(function (resolve, reject) {
+                        _this.http.get(_this.url + "/count/" + active).subscribe(function (res) {
+                            resolve(res.json());
+                        }, function (error) {
+                            reject(error);
+                        });
+                    });
+                };
                 CourseService.prototype.getCourses = function () {
                     var _this = this;
                     return new Promise(function (resolve, reject) {
-                        _this.http.get(_this.url + "/true/asc").subscribe(function (res) {
+                        _this.http.get(_this.url + "/" + ACTIVES + "/" + ASC_SORT).subscribe(function (res) {
                             resolve(res.json());
                         }, function (error) {
                             reject(error);
@@ -42,9 +52,7 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
                 CourseService.prototype.createCourse = function (course) {
                     var _this = this;
                     return new Promise(function (resolve, reject) {
-                        _this.http.post(_this.url, 
-                        //'title=' + course.title + '&hours=' + course.hours + '&teacherId=' + course.teacher + '&level=' + course.level + '&active=' + course.active,
-                        JSON.stringify(course), {
+                        _this.http.post(_this.url, JSON.stringify(course), {
                             headers: _this.headers
                         }).subscribe(function (res) {
                             resolve(res);
@@ -53,6 +61,10 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
                         });
                     });
                 };
+                CourseService.ACTIVES = true;
+                CourseService.NOT_ACTIVES = false;
+                CourseService.ASC_SORT = "asc";
+                CourseService.DESC_SORT = "desc";
                 CourseService = __decorate([
                     core_1.Injectable(), 
                     __metadata('design:paramtypes', [http_1.Http])

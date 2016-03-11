@@ -3,17 +3,37 @@ import {Http, Headers} from "angular2/http";
 
 @Injectable()
 export class CourseService {
+    static ACTIVES: boolean = true;
+    static NOT_ACTIVES: boolean = false;
+    static ASC_SORT: string = "asc";
+    static DESC_SORT: string = "desc";
+
     private url: string = "http://localhost:8080/courses";
     private headers: Headers = new Headers;
+
     constructor(private http: Http) {
         this.http = http;
         this.headers.append('Content-Type', 'application/json');
     }
 
+    countCourses(active: boolean) {
+        return new Promise((resolve, reject) => {
+
+            this.http.get(this.url + "/count/" + active).subscribe(
+                res => {
+                    resolve(res.json());
+                },
+                error => {
+                    reject(error);
+                }
+            )
+        })
+    }
+
     getCourses() {
         return new Promise((resolve, reject) => {
             
-            this.http.get(this.url + "/true/asc").subscribe(
+            this.http.get(this.url + "/" + ACTIVES + "/" + ASC_SORT).subscribe(
                 res => {
                     resolve(res.json());
                 },
@@ -27,8 +47,7 @@ export class CourseService {
     createCourse(course) {
         return new Promise((resolve, reject) => {
             this.http.post(
-                this.url,
-                //'title=' + course.title + '&hours=' + course.hours + '&teacherId=' + course.teacher + '&level=' + course.level + '&active=' + course.active,
+                this.url,                
                 JSON.stringify(course),
                 {
                     headers: this.headers
