@@ -54,14 +54,8 @@ export class Table {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (xhttp.readyState == 4 && xhttp.status == 200) {
-                        var dataAfterSorting = JSON.parse(xhttp.responseText);                        
-                        var rowsThisPage = dataAfterSorting.slice(params.startRow, params.endRow);
-                        var lastRow = -1;
-                        if (dataAfterSorting.length <= params.endRow) {
-                            lastRow = dataAfterSorting.length;
-                        }
-                        params.successCallback(rowsThisPage, lastRow);
-
+                        var data = JSON.parse(xhttp.responseText);                                                
+                        params.successCallback(data, params.endRow);
                     }
                 }
 
@@ -69,7 +63,7 @@ export class Table {
                 if (params.sortModel.length != 0) {
                     this.sort = params.sortModel[0].sort;
                 }
-                xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort, true);
+                xhttp.open("GET", "http://localhost:8080/courses/true/" + this.sort + "/" + params.startRow + "/" + this.pageSize, true);
                 xhttp.send(); 
             }
 

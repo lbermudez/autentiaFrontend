@@ -40,11 +40,14 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                 function CourseForm(courseService, teacherService, builder, router) {
                     this.router = router;
                     this.levels = ['', 'BASICO', 'INTERMEDIO', 'AVANZADO'];
+                    this.options = {
+                        url: 'http://localhost:8080/upload'
+                    };
                     this.router = router;
                     this.courseService = courseService;
                     this.teacherService = teacherService;
                     this.courseForm = builder.group({
-                        active: ["", common_1.Validators.compose([])],
+                        active: [false, common_1.Validators.compose([])],
                         teacher: ["", common_1.Validators.compose([
                                 common_1.Validators.required
                             ])],
@@ -79,9 +82,14 @@ System.register(["angular2/core", "angular2/common", "../../providers/services/C
                         console.log(error);
                     });
                 };
+                CourseForm.prototype.handleUpload = function (data) {
+                    if (data && data.response) {
+                        data = JSON.parse(data.response);
+                        this.uploadFile = data;
+                    }
+                };
                 CourseForm = __decorate([
                     core_1.Component({
-                        selector: "my-app",
                         templateUrl: "./app/components/form/courseForm.html",
                         directives: [common_1.FORM_DIRECTIVES],
                         providers: [CourseService_1.CourseService, TeacherService_1.TeacherService, http_1.HTTP_PROVIDERS]

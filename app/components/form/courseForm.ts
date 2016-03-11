@@ -6,8 +6,9 @@ import {HTTP_PROVIDERS} from "angular2/http";
 import {Course, Teacher} from "../../classes/Model";
 import {Router} from "angular2/router";
 
-@Component({
-    selector: "my-app",
+
+
+@Component({    
     templateUrl: "./app/components/form/courseForm.html",
     directives: [FORM_DIRECTIVES],
     providers: [CourseService, TeacherService, HTTP_PROVIDERS]
@@ -26,7 +27,7 @@ export class CourseForm {
 		this.courseService = courseService;
 		this.teacherService = teacherService;
         this.courseForm = builder.group({        	
-			active: ["", Validators.compose(
+			active: [false, Validators.compose(
                 []
             )], 
 			teacher: ["", Validators.compose(
@@ -77,5 +78,17 @@ export class CourseForm {
                 console.log(error);
             }
         )
+    }
+
+    uploadFile: any;
+    options: Object = {
+        url: 'http://localhost:8080/upload'
+    };
+
+    handleUpload(data): void {
+        if (data && data.response) {
+            data = JSON.parse(data.response);
+            this.uploadFile = data;
+        }
     }
 }
