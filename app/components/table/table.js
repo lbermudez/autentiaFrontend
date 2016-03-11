@@ -63,7 +63,7 @@ System.register(['angular2/core', "../../providers/services/CourseService", "ang
                                     if (data.length <= params.endRow) {
                                         lastRow = data.length;
                                     }
-                                    params.successCallback(data, data);
+                                    params.successCallback(data, lastRow);
                                 }
                             };
                             if (params.sortModel.length != 0) {

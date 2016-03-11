@@ -42,7 +42,7 @@ export class Table {
 
     private getDataSource(countCourses) {
         var dataSource = {
-            sort: 'asc';
+            sort: 'asc',
             rowCount: countCourses,
             pageSize: 5,
 
@@ -60,7 +60,7 @@ export class Table {
                             lastRow = data.length;
                         }
 
-                        params.successCallback(data, data);
+                        params.successCallback(data, lastRow);
                     }
                 }
 
